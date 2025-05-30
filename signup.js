@@ -1,16 +1,25 @@
-
-const auth = firebase.auth();
-
 function signup() {
+  const fullName = document.getElementById("fullname").value;
+  const cpf = document.getElementById("cpf").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  auth.createUserWithEmailAndPassword(email, password)
-    .then(() => {
-      alert("Cadastro realizado!");
-      window.location.href = "index.html";
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      return firebase.firestore().collection("users").doc(user.uid).set({
+        fullName,
+        cpf,
+        email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
     })
-    .catch(error => {
-      alert("Erro ao cadastrar: " + error.message);
+    .then(() => {
+      alert("Cadastro realizado com sucesso!");
+      window.location.href = "login.html";
+    })
+    .catch((error) => {
+      console.error(error);
+      alert("Erro no cadastro: " + error.message);
     });
 }
