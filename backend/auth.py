@@ -1,0 +1,1 @@
+# Lógica de backend (ex: autenticação com email e senha)
